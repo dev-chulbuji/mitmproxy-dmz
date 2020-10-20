@@ -1,0 +1,8 @@
+---
+listen_port: 8080
+scripts:
+  - /home/mitmproxy/addons/src_addon_api_proxy.py
+termlog_verbosity: warn
+flow_detail: 1
+http2: false
+...

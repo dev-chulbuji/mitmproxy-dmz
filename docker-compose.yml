@@ -1,0 +1,12 @@
+version: '3'
+
+services:
+  mitm:
+    container_name: mitm
+    image: mitmproxy/mitmproxy:5.2
+    command: "mitmdump"
+    volumes:
+      - "./addons:/home/mitmproxy/addons"
+      - "./conf:/home/mitmproxy/.mitmproxy"
+    ports:
+      - 8080:8080

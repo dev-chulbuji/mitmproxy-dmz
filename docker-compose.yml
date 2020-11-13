@@ -3,10 +3,13 @@ version: '3'
 services:
   mitm:
     container_name: mitm
-    image: mitmproxy/mitmproxy:5.2
+    image: mitm-boto3
     command: "mitmdump"
     volumes:
       - "./addons:/home/mitmproxy/addons"
       - "./conf:/home/mitmproxy/.mitmproxy"
+      - "./certs:/home/mitmproxy/certs"
     ports:
       - 8080:8080
+    env_file:
+      - "./env"

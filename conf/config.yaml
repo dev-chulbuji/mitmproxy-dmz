@@ -5,4 +5,5 @@ scripts:
 termlog_verbosity: warn
 flow_detail: 1
 http2: false
+confdir: /home/mitmproxy/certs
 ...

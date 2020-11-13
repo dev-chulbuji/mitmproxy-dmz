@@ -1,16 +1,16 @@
 from mitmproxy import ctx, http, log
 
-# from src_addon_aws_iam_manager import AWSThreadManager
+from src_addon_aws_iam_manager import AWSThreadManager
 from datetime import datetime
 
 import src_addon_config as config
-import src_addon_logger as proxy_logger
+# import src_addon_logger as proxy_logger
 import re, json, sys, signal
 
 class AwsApiCallProxy:
     def __init__(self):
-        # self.aws_thread_manager = AWSThreadManager()
-        # self.aws_thread_manager.start()
+        self.aws_thread_manager = AWSThreadManager()
+        self.aws_thread_manager.start()
 
         # graceful shutdown
         signal.signal(signal.SIGINT, self.signal_handler)
@@ -53,11 +53,13 @@ class AwsApiCallProxy:
 
         is_aws_api, accesskey = self.check_aws_api_call(flow.request.headers)
         
-        # if is_aws_api == True:
-        #     if not self.check_access_key(accesskey):
-        #         ctx.log.info("%s | not exist accesskey | host=%s, accesskey=%s" % (datetime.now(), host, accesskey))
-        #         self.send_blocked_response(flow)
-        #         return
+        if is_aws_api == True:
+            if not self.check_access_key(accesskey):
+                ctx.log.info("%s | not exist accesskey | host=%s, accesskey=%s" % (datetime.now(), host, accesskey))
+                self.send_blocked_response(flow)
+                return
+            else:
+                ctx.log.info("exit")
 
         
         self.print_log(host, accesskey)
@@ -108,13 +110,13 @@ class AwsApiCallProxy:
         accesskey = splitted[0]
         return True, accesskey
     
-    # def check_access_key(self, key):
-    #     key_to_user = self.aws_thread_manager.get_key_to_user()
-    #
-    #     if len(key_to_user.values()) == 0:
-    #         return False
-    #
-    #     return key in key_to_user
+    def check_access_key(self, key):
+        key_to_user = self.aws_thread_manager.get_key_to_user()
+
+        if len(key_to_user.values()) == 0:
+            return False
+
+        return key in key_to_user
 
     def send_blocked_response(self, flow):
         flow.response = http.HTTPResponse.make(
@@ -124,7 +126,7 @@ class AwsApiCallProxy:
         )
 
     def log(self, e):
-        proxy_logger.info(json.dumps(e.msg))
+        ctx.log.info(json.dumps(e.msg))
 
 addons = [
     AwsApiCallProxy()

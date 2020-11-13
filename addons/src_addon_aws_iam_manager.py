@@ -1,6 +1,5 @@
-from mitmproxy import ctx
 import boto3, json, threading, datetime
-import src_addon_logger as proxy_logger
+# import src_addon_logger as proxy_logger
 
 class AWSThreadManager(threading.Thread):
     def __init__(self):
@@ -31,7 +30,7 @@ class AWSThreadManager(threading.Thread):
 
         self.key_to_user = rtv
 
-        proxy_logger.info("complete to get users " + str(datetime.datetime.now()))
+        ctx.log.info("complete to get users " + str(datetime.datetime.now()))
 
     def get_access_key(self, userName):
         access_keys = self.client.list_access_keys(UserName = userName)

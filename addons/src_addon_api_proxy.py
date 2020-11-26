@@ -47,7 +47,7 @@ class AwsApiCallProxy:
         check = self.check_request_host_by_whitelist(host)
 
         if not check:
-            ctx.log.info("%s | filter non aws api call: hsot=%s" % (datetime.now(), host))
+            ctx.log.warn("%s | filter non aws api call: hsot=%s" % (datetime.now(), host))
             flow.kill()
             return
 
@@ -76,11 +76,10 @@ class AwsApiCallProxy:
 ###########################################################################################################
 
     def print_log(self, host, accesskey):
-        # user = self.aws_thread_manager.get_user_by_key(accesskey)
-        ctx.log.info("%s | request info :: accesskey=%s, host=%s" % (datetime.now(), accesskey, host))
+        ctx.log.warn("%s | request info :: accesskey=%s, host=%s" % (datetime.now(), accesskey, host))
 
     def check_request_host_by_whitelist(self, host):
-        rgx = ctx.options.filterurl
+        rgx = ctx.options.AwsApiUrlFilter
         p = re.compile(rgx)
         m = p.match(host)
 

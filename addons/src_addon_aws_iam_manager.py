@@ -1,4 +1,5 @@
 import boto3, json, threading, datetime
+from  mitmproxy import ctx
 # import src_addon_logger as proxy_logger
 
 class AWSThreadManager(threading.Thread):
